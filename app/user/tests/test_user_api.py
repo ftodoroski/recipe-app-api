@@ -8,6 +8,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
+
 TEST_EMAIL = 'test@gmail.com'
 TEST_PASSWORD = 'testpass'
 TEST_NAME = 'Test name'
@@ -53,7 +54,7 @@ class PublicUserApiTests(TestCase):
         """Test that the password must be more than 5 characters"""
         payload = {
             'email': TEST_EMAIL,
-            'password': 'pw', 
+            'password': 'pw',
             'name': TEST_NAME
         }
         res = self.client.post(CREATE_USER_URL, payload)
@@ -67,8 +68,9 @@ class PublicUserApiTests(TestCase):
     def test_create_token_for_user(self):
         """Test that token is created for the user"""
         payload = {
-            'email': TEST_EMAIL, 
-            'password': TEST_PASSWORD, 
+            'email': TEST_EMAIL,
+            'password': TEST_PASSWORD,
+            'name': TEST_NAME
         }
         create_user(**payload)
         res = self.client.post(TOKEN_URL, payload)
@@ -80,7 +82,7 @@ class PublicUserApiTests(TestCase):
         """Test that token is not created if invalid credentials are given"""
         create_user(email=TEST_EMAIL, password=TEST_PASSWORD)
         payload = {
-            'email': TEST_EMAIL, 
+            'email': TEST_EMAIL,
             'password': 'wrong'
         }
         res = self.client.post(TOKEN_URL, payload)
@@ -91,8 +93,8 @@ class PublicUserApiTests(TestCase):
     def test_create_token_no_user(self):
         """Test that token is not created if user doesnt exist"""
         payload = {
-            'email': TEST_EMAIL, 
-            'password': TEST_PASSWORD
+            'email': TEST_EMAIL,
+            'password': TEST_PASSWORD,
         }
         res = self.client.post(TOKEN_URL, payload)
 
